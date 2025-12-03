@@ -41,7 +41,7 @@ class Estudiantes3A {
   public int getCal(int idx) {
     if (idx < 0 || idx >= calif.length) {
       // valor especial para indicar error
-      return 0;
+      return -1;
     }
     return calif[idx];
   }
