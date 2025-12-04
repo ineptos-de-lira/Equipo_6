@@ -138,11 +138,11 @@ class GestorCalif {
       .append("REPROBADOS ING: ").append(rep("ING")).append("\n")
       .append("---- LISTA ----\n");
     for (Estudiantes3A estudiante : lista) {
-        r.append("* ").append(estudiante.nombre)
-        .append(" | MAT=").append(estudiante.calif[0])
-        .append(" ESP=").append(estudiante.calif[1])
-        .append(" ING=").append(estudiante.calif[2])
-        .append(" | prom=").append(promEst(estudiante.id)).append("\n");
+      r.append("* ").append(estudiante.nombre)
+      .append(" | MAT=").append(estudiante.calif[0])
+      .append(" ESP=").append(estudiante.calif[1])
+      .append(" ING=").append(estudiante.calif[2])
+      .append(" | prom=").append(promEst(estudiante.id)).append("\n");
     }
     r.append("=====================================================\n");
     return r.toString();
