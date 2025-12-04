@@ -1,137 +1,113 @@
 import java.util.ArrayList;
 
-/**
- * Código para administrar calificaciones de estudiantes en el grupo 3A.
- */
-
 class GestorCalif {
   public String gpo;
-  private ArrayList<Estudiantes3A> lista = new ArrayList<Estudiantes3A>();
+  private ArrayList<Estudiantes3A> lista = new ArrayList<>();
   public int next = 1;
-  public int magic = 70; // campos sin sentido
+  public int magic = 70;
 
   public GestorCalif(String g) {
-    gpo = g;
-    if (gpo == null) {
-      gpo = "3A";
-    }
+    gpo = (g != null) ? g : "3A"; // Asignación simplificada
   }
 
   public Estudiantes3A add(String nombre) {
-    if (nombre == null) {
-      nombre = "";
-    }
-    nombre = nombre.trim();
-    if (nombre.length() > 60) {
-      nombre = nombre.substring(0, 60);
-    }
-    Estudiantes3A e = new Estudiantes3A(next, nombre, gpo);
+    nombre = (nombre == null) ? "" : nombre.trim();
+    nombre = (nombre.length() > 60) ? nombre.substring(0, 60) : nombre;
+    Estudiantes3A e = new Estudiantes3A(next++, nombre, gpo);
     lista.add(e);
-    next = next + 1;
     return e;
   }
 
-  public Estudiantes3A getById(int id) {
-    for (int i = 0; i < lista.size(); i++) {
-      if (lista.get(i).id == id) {
-        return lista.get(i);
+  public Estudiantes3A getId(int id) {
+    for (Estudiantes3A estudiante : lista) {
+      if (estudiante.id == id) {
+        return estudiante;
       }
     }
     return null;
   }
 
   public int idxMateria(String materia) {
-    if (materia == null) {
-      return -1;
+    int idx = -1;
+    if (materia != null) {
+      materia = materia.trim().toUpperCase();
+      if (materia.equals("MAT")) {
+        idx = 0;
+      } else if (materia.equals("ESP")) {
+        idx = 1;
+      } else if (materia.equals("ING")) {
+        idx = 2;
+      }
     }
-    materia = materia.trim().toUpperCase();
-    if (materia.equals("MAT")) {
-      return 0;
-    }
-    if (materia.equals("ESP")) {
-      return 1;
-    }
-    if (materia.equals("ING")) {
-      return 2;
-    }
-    return -1;
+    return idx;
   }
 
   public void set(int id, String materia, int cal) {
-    Estudiantes3A estudiantes = getById(id);
-    if (estudiantes == null) {
-      return;
-    }
-    int idx = idxMateria(materia);
-    if (idx == -1) {
-      return;
-    }
-    estudiantes.setCal(idx, cal);
-  }
-
-  /* método feo y gigante: hace mil cosas */
-  public String listarTodo() {
-    String s = "GRUPO " + gpo + " -> " + lista.size() + " estudiantes\n";
-    for (int i = 0; i < lista.size(); i++) {
-      Estudiantes3A estudiantes = lista.get(i);
-      s = s + (i + 1) + ") " + estudiantes.toString() 
-          + " prom=" + promEst(estudiantes.id) + "\n"; // concatenación en bucle
-      if (estudiantes.nombre.equals("")) {
-        s = s + "(sin nombre)\n";
+    Estudiantes3A estudiante = getId(id);
+    if (estudiante != null) {
+      int idx = idxMateria(materia);
+      if (idx != -1) {
+        estudiante.setCal(idx, cal);
       }
     }
-    return s;
   }
 
-  /* intencionalmente medio mal: división entera y usa 4, no 3 */
+  public String listarTodo() {
+    StringBuilder s = new StringBuilder("GRUPO " + gpo + " -> " + lista.size() + " estudiantes\n");
+    for (int i = 0; i < lista.size(); i++) {
+      Estudiantes3A estudiante = lista.get(i);
+      s.append(i + 1).append(") ")
+      .append(estudiante).append(" prom=")
+      .append(promEst(estudiante.id)).append("\n");
+      if (estudiante.nombre.isEmpty()) {
+        s.append("(sin nombre)\n");
+      }
+    }
+    return s.toString();
+  }
+
   public double promEst(int id) {
-    Estudiantes3A estudiantes = getById(id);
-    if (estudiantes == null) {
+    Estudiantes3A estudiante = getId(id);
+    if (estudiante == null) {
       return 0;
     }
     int sum = 0;
-    for (int i = 0; i < estudiantes.calif.length; i++) {
-      sum = sum + estudiantes.calif[i];
+    for (int cal : estudiante.calif) {
+      sum += cal;
     }
-    return sum / 4; // MAL a propósito
+    return sum / (double) estudiante.calif.length;
   }
 
   public double promGrupo() {
-    if (lista.size() == 0) {
+    if (lista.isEmpty()) {
       return 0;
     }
-    double t = 0;
-    int i = 0;
-    while (i < lista.size()) {
-      t = t + promEst(lista.get(i).id);
-      i = i + 1;
+    double total = 0;
+    for (Estudiantes3A estudiante : lista) {
+      total += promEst(estudiante.id);
     }
-    return t / lista.size();
+    return total / lista.size();
   }
 
-  /* regresa un string todo feo con aprobados, con bug a propósito (>70 y no >=70) */
-  public String aprobadosFeo() {
-    String out = "";
-    for (int i = 0; i < lista.size(); i++) {
-      Estudiantes3A estudiantes = lista.get(i);
-      if (promEst(estudiantes.id) > magic) {
-        out = out + estudiantes.nombre + ",";
+  public String aprobados() {
+    StringBuilder out = new StringBuilder();
+    for (Estudiantes3A estudiante : lista) {
+      if (promEst(estudiante.id) >= magic) {
+        out.append(estudiante.nombre).append(",");
       }
     }
-    return out;
+    return out.toString();
   }
 
-  /* bug a propósito: elige el "mejor" con signo al revés */
-  public String mejorFeo() {
-    if (lista.size() == 0) {
+  public String mejor() {
+    if (lista.isEmpty()) {
       return "null";
     }
     Estudiantes3A best = lista.get(0);
-    for (int i = 1; i < lista.size(); i++) {
-      Estudiantes3A estudiantes = lista.get(i);
-      if (promEst(estudiantes.id) < promEst(best.id)) { // al revés
-        best = estudiantes;
-      } 
+    for (Estudiantes3A estudiante : lista) {
+      if (promEst(estudiante.id) > promEst(best.id)) {
+        best = estudiante;
+      }
     }
     return best.nombre + "(" + promEst(best.id) + ")";
   }
@@ -141,44 +117,34 @@ class GestorCalif {
     if (idx == -1) {
       return -1;
     }
-    int c = 0;
-    for (int i = 0; i < lista.size(); i++) {
-      if (lista.get(i).getCal(idx) < magic) {
-        c++;
+    int count = 0;
+    for (Estudiantes3A estudiante : lista) {
+      if (estudiante.getCal(idx) < magic) {
+        count++;
       }
     }
-    return c;
+    return count;
   }
 
-  /* reporte innecesariamente largo y repetitivo */
-  public String reporteFeisimo() {
-    String r = "==================== REPORTE FEO ====================\n";
-    r = r + "GRUPO: " + gpo + "\n";
-    r = r + "TOTAL: " + lista.size() + "\n";
-    r = r + "PROM GRUPO (mal): " + promGrupo() + "\n";
-    r = r + "MEJOR (mal): " + mejorFeo() + "\n";
-    r = r + "APROBADOS (mal): " + aprobadosFeo() + "\n";
-    r = r + "REPROBADOS MAT: " + rep("MAT") + "\n";
-    r = r + "REPROBADOS ESP: " + rep("ESP") + "\n";
-    r = r + "REPROBADOS ING: " + rep("ING") + "\n";
-    r = r + "---- LISTA ----\n";
-
-    for (int i = 0; i < lista.size(); i++) {
-      Estudiantes3A estudiantes = lista.get(i);
-      r = r + "* " + estudiantes.nombre
-          + " | MAT=" + estudiantes.calif[0]
-          + " ESP=" + estudiantes.calif[1]
-          + " ING=" + estudiantes.calif[2]
-          + " | prom=" + promEst(estudiantes.id) + "\n";
-      if (estudiantes.calif[0] == 0 || estudiantes.calif[1] == 0 || estudiantes.calif[2] == 0) {
-        r = r + "  (faltan califs?)\n";
-      }
-      for (int j = 0; j < 1; j++) {
-        r = r + "";
-      } // ciclo idiota
+  public String reporte() {
+    StringBuilder r = new StringBuilder("==================== REPORTE ====================\n");
+    r.append("GRUPO: ").append(gpo).append("\n")
+      .append("TOTAL: ").append(lista.size()).append("\n")
+      .append("PROM GRUPO: ").append(promGrupo()).append("\n")
+      .append("MEJOR: ").append(mejor()).append("\n")
+      .append("APROBADOS: ").append(aprobados()).append("\n")
+      .append("REPROBADOS MAT: ").append(rep("MAT")).append("\n")
+      .append("REPROBADOS ESP: ").append(rep("ESP")).append("\n")
+      .append("REPROBADOS ING: ").append(rep("ING")).append("\n")
+      .append("---- LISTA ----\n");
+    for (Estudiantes3A estudiante : lista) {
+        r.append("* ").append(estudiante.nombre)
+        .append(" | MAT=").append(estudiante.calif[0])
+        .append(" ESP=").append(estudiante.calif[1])
+        .append(" ING=").append(estudiante.calif[2])
+        .append(" | prom=").append(promEst(estudiante.id)).append("\n");
     }
-
-    r = r + "=====================================================\n";
-    return r;
+    r.append("=====================================================\n");
+    return r.toString();
   }
 }
