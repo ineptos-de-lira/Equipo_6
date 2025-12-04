@@ -9,7 +9,7 @@ public class Main {
   static GestorCalif g = new GestorCalif("3A");
 
   /**
-   * Método principal del programa.
+   * Método principal del programa para tener datos de estudiantes.
    */
   public static void main(String[] a) throws Exception {
     System.out.println("ADMINISTRADOR DE CALIFICACIONES 3A (feo a propósito)");
@@ -18,9 +18,9 @@ public class Main {
     menu();
   }
 
-  // Datos cómo de ejemplo para correr el programa
+  // Datos de ejemplo para correr el programa
   static void seed() {
-    g.add("Ana");
+    g.add("Anabell");
     g.add("Luis");
     g.add("Sofia");
 
@@ -98,10 +98,10 @@ public class Main {
           System.out.println("promGrupo=" + g.promGrupo());
           break;
         case 6:
-          System.out.println("aprobados=" + g.aprobadosFeo());
+          System.out.println("aprobados=" + g.aprobados());
           break;
         case 7:
-          System.out.println("mejor=" + g.mejorFeo());
+          System.out.println("mejor=" + g.mejor());
           break;
         case 8:
           System.out.print("materia(MAT/ESP/ING): ");
@@ -109,7 +109,7 @@ public class Main {
           System.out.println("reprobados=" + g.rep(mm));
           break;
         case 9:
-          System.out.println(g.reporteFeisimo());
+          System.out.println(g.reporte());
           break;
         default:
           System.out.println("no");
