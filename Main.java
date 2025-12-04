@@ -1,24 +1,21 @@
 import java.util.Scanner;
 
 /**
- *Código para administrar calificaciones de estudiantes en el grupo 3A.
- *Ya tiene las reglas de lintter y tiene tambien el checkstyle aplicado.
+ * Código para administrar calificaciones de estudiantes en el grupo 3A.
  */
 public class Main {
-  public static Scanner S = new Scanner(System.in);
+  public static Scanner s = new Scanner(System.in);
   static GestorCalif g = new GestorCalif("3A");
 
   /**
    * Método principal del programa para tener datos de estudiantes.
    */
-  public static void main(String[] a) throws Exception {
-    System.out.println("ADMINISTRADOR DE CALIFICACIONES 3A (feo a propósito)");
-    System.out.println("Materias válidas: MAT, ESP, ING");
+  public static void main(String[] args) {
+    System.out.println("ADMINISTRADOR DE CALIFICACIONES 3A");
     seed();
     menu();
   }
 
-  // Datos de ejemplo para correr el programa
   static void seed() {
     g.add("Anabell");
     g.add("Luis");
@@ -31,71 +28,57 @@ public class Main {
     g.set(2, "MAT", 70);
     g.set(2, "ESP", 70);
     g.set(2, "ING", 70);
-
+    
     g.set(3, "MAT", 60);
     g.set(3, "ESP", 65);
     g.set(3, "ING", 40);
   }
 
+  // Menú principal
   static void menu() {
-    int op = 0;
-    String tmp = null;
-
+    int op;
     while (true) {
-      System.out.println(
-            "\n1) listar"
-            + "\n2) agregar"
-            + "\n3) calificar"
-            + "\n4) promedio alumno"
-            + "\n5) promedio grupo"
-            + "\n6) aprobados"
-            + "\n7) mejor"
-            + "\n8) reprobados por materia"
-            + "\n9) reporte"
-            + "\n0) salir"
-      );
-      System.out.print("op: ");
-      try {
-        tmp = S.nextLine();
-        if (tmp == null) {
-          tmp = "";
-        }
-        op = Integer.parseInt(tmp.trim());
-      } catch (Exception e) {
-        op = -999;
-      }
+      System.out.println("\n1) Listar\n2) Agregar\n3) Calificar"
+          + "\n4) Promedio alumno\n5) Promedio grupo\n0) Salir");
+      System.out.print("Elige una opción: ");
+      op = toInt(s.nextLine());
 
       if (op == 0) {
-        break;
+        System.out.print("¿Estás seguro de que quieres salir? (S/N): ");
+        String confirmar = s.nextLine();
+        if (confirmar.equalsIgnoreCase("S")) {
+          System.out.println("Adiós");
+          break; // Salir del bucle y terminar el programa
+        } else {
+          System.out.println("Si le sabes, Volviendo al menú.");
+        }
       }
 
+      // Lógica del menú
       switch (op) {
         case 1:
           System.out.println(g.listarTodo());
           break;
         case 2:
-          System.out.print("nombre: ");
-          String n = S.nextLine();
-          g.add(n);
-          System.out.println("ok");
+          System.out.print("Nombre: ");
+          g.add(s.nextLine());
+          System.out.println("Estudiante agregado.");
           break;
         case 3:
-          System.out.print("id: ");
-          int id = toInt(S.nextLine());
-          System.out.print("materia(MAT/ESP/ING): ");
-          String m = S.nextLine();
-          System.out.print("calif: ");
-          int c = toInt(S.nextLine());
-          g.set(id, m, c);
-          System.out.println("listo");
+          System.out.print("ID: ");
+          int id = toInt(s.nextLine());
+          System.out.print("Materia (MAT/ESP/ING): ");
+          String subject = s.nextLine();
+          System.out.print("Calificación: ");
+          g.set(id, subject, toInt(s.nextLine()));
+          System.out.println("Calificación actualizada.");
           break;
         case 4:
-          System.out.print("id: ");
-          int id2 = toInt(S.nextLine());
-          System.out.println("prom=" + g.promEst(id2));
+          System.out.print("ID: ");
+          System.out.println("Promedio: " + g.promEst(toInt(s.nextLine())));
           break;
         case 5:
-          System.out.println("promGrupo=" + g.promGrupo());
+          System.out.println("Promedio grupo: " + g.promGrupo());
           break;
         case 6:
           System.out.println("aprobados=" + g.aprobados());
@@ -105,25 +88,24 @@ public class Main {
           break;
         case 8:
           System.out.print("materia(MAT/ESP/ING): ");
-          String mm = S.nextLine();
+          String mm = s.nextLine();
           System.out.println("reprobados=" + g.rep(mm));
           break;
         case 9:
           System.out.println(g.reporte());
           break;
         default:
-          System.out.println("no");
-          break;
+          System.out.println("Opción no válida.");
       }
     }
-    System.out.println("bye");
   }
 
   static int toInt(String s) {
     try {
       return Integer.parseInt(s.trim());
-    } catch (Exception e) {
+    } catch (NumberFormatException e) {
       return -1;
     }
   }
 }
+
