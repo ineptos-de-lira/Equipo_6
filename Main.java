@@ -88,7 +88,7 @@ public class Main {
           break;
         case 8:
           System.out.print("materia(MAT/ESP/ING): ");
-          String mm = S.nextLine();
+          String mm = s.nextLine();
           System.out.println("reprobados=" + g.rep(mm));
           break;
         case 9:
