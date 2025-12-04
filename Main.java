@@ -8,7 +8,7 @@ public class Main {
   static GestorCalif g = new GestorCalif("3A");
 
   /**
-   *Programa principal.
+   * Método principal del programa para tener datos de estudiantes.
    */
   public static void main(String[] args) {
     System.out.println("ADMINISTRADOR DE CALIFICACIONES 3A");
@@ -17,7 +17,7 @@ public class Main {
   }
 
   static void seed() {
-    g.add("Ana");
+    g.add("Anabell");
     g.add("Luis");
     g.add("Sofia");
 
@@ -79,6 +79,20 @@ public class Main {
           break;
         case 5:
           System.out.println("Promedio grupo: " + g.promGrupo());
+          break;
+        case 6:
+          System.out.println("aprobados=" + g.aprobados());
+          break;
+        case 7:
+          System.out.println("mejor=" + g.mejor());
+          break;
+        case 8:
+          System.out.print("materia(MAT/ESP/ING): ");
+          String mm = S.nextLine();
+          System.out.println("reprobados=" + g.rep(mm));
+          break;
+        case 9:
+          System.out.println(g.reporte());
           break;
         default:
           System.out.println("Opción no válida.");
