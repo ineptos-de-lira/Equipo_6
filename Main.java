@@ -7,6 +7,9 @@ public class Main {
   public static Scanner s = new Scanner(System.in);
   static GestorCalif g = new GestorCalif("3A");
 
+  /**
+   *Programa principal.
+   */
   public static void main(String[] args) {
     System.out.println("ADMINISTRADOR DE CALIFICACIONES 3A");
     seed();
@@ -35,7 +38,8 @@ public class Main {
   static void menu() {
     int op;
     while (true) {
-      System.out.println("\n1) Listar\n2) Agregar\n3) Calificar\n4) Promedio alumno\n5) Promedio grupo\n0) Salir");
+      System.out.println("\n1) Listar\n2) Agregar\n3) Calificar"
+          + "\n4) Promedio alumno\n5) Promedio grupo\n0) Salir");
       System.out.print("Elige una opción: ");
       op = toInt(s.nextLine());
 
@@ -90,3 +94,4 @@ public class Main {
     }
   }
 }
+
