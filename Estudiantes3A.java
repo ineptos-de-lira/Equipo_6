@@ -8,37 +8,46 @@ class Estudiantes3A {
 
   public Estudiantes3A(int i, String n, String g) {
     id = i;
-    nombre = n;
-    grupo = g;
-    if (nombre == null) {
+
+    // Por si no se tiene nombre
+    if (n == null) {
       nombre = "";
+    } else {
+      nombre = n;
+    }
+
+    // Si el grupo viene vacío, usar por default "3A"
+    if (g == null || g.trim().equals("")) {
+      grupo = "3A";
+    } else {
+      grupo = g;
     }
   }
 
   public void setCal(int idx, int v) {
+    if (idx < 0 || idx >= calif.length) {
+      return;
+    }
+
     if (v < 0) {
       v = 0;
-    }
-    if (v > 100) {
+    } else if (v > 100) {
       v = 100;
     }
-    try {
-      calif[idx] = v;
-    } catch (Exception e) {
-            // ignorado a propósito
-    }
+
+    calif[idx] = v;
   }
   
   public int getCal(int idx) {
-    try {
-      return calif[idx];
-    } catch (Exception e) {
-      return -999;
+    if (idx < 0 || idx >= calif.length) {
+      // valor especial para indicar error
+      return -1;
     }
+    return calif[idx];
   }
 
   @Override
-    public String toString() {
+  public String toString() {
     return "Estudiante3A{ID=" + id
                 + ",NOMBRE=" + nombre
                 + ",GRUPO=" + grupo
